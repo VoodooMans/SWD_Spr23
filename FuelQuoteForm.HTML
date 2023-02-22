@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>
+            Full Quote Form
+        </title>
+    </head>
+    <BODY>
+        <form>
+            <h1>Full Quote Form</h1>
+            <p>Please fill out the following form to receive your fuel quote</p>
+            <hr>
+            <label>Gallons Requested</label>
+            <input type = "number" placeholder="Gallons Requested" required/>
+            <br>
+            <label>Delivery Address</label>
+            <input type = "text" placeholder="Delivery Address" readonly="readonly" required/>
+            <br> 
+            <br>
+
+            <fieldset>
+                <legend>Pick Your Date</legend>
+                <label for="my-date-picker"> Date:
+                    <input id="my-date-picker" type = "date" name ="" value = "">
+                </label>
+            </fieldset>
+            <br>
+
+            <label>Suggested Price Per Gallon</label>
+            <input type = "number" placeholder="Calculated by pricing module" readonly="readonly" required/>
+            <br>
+            <label>Total Amount Due</label>
+            <input type = "number" placeholder="Gallons * Price" readonly="readonly" required/>
+            <br>
+            
+            
+
+			<button>Complete Full Quote Form</button>
+        </form>
+    </BODY>
+</html>
