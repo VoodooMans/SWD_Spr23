@@ -29,6 +29,13 @@ class WebsiteTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(false, $result);
     }
 
+    public function testPassword5() {
+        $password = new Demo\Website;
+
+        $result = $password->attemptPassword("BobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobby","BobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobby");
+        $this->assertEquals(false, $result);
+    }
+
     public function testLogin() {
         $login = new Demo\Website;
 
@@ -63,6 +70,13 @@ class WebsiteTest extends \PHPUnit\Framework\TestCase {
         $result = $username->attemptUsername("username");
         $this->assertEquals(true, $result);
     }    
+
+    public function testUsername3() {
+        $username = new Demo\Website;
+        
+        $result = $username->attemptUsername("BobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobbyBobby");
+        $this->assertEquals(false, $result);
+    }
 
     public function testFullName() {
         $name = new Demo\Website;
@@ -188,6 +202,13 @@ class WebsiteTest extends \PHPUnit\Framework\TestCase {
 
         $result = $gallons->attemptRequestGallons("123");
         $this->assertEquals(true, $result);
+    }
+
+    public function testRequestGallons4() {
+        $gallons = new Demo\Website;
+
+        $result = $gallons->attemptRequestGallons("11000");
+        $this->assertEquals(false, $result);
     }
 
     public function testDate() {
