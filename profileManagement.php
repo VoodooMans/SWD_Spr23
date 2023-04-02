@@ -1,5 +1,6 @@
 <?php
 session_start(); 
+require_once('db_conn.php');
 
     if (isset($_SESSION['user_name'])){
         if (isset($_POST['full_name']) && isset($_POST['address1']) && isset($_POST['address2']) && isset($_POST['city']) && isset($_POST['state']) && isset($_POST['zipcode'])) {
@@ -44,16 +45,44 @@ session_start();
             } else if (strlen($zipcode) < 5 || strlen($zipcode) > 9) {
                 header("Location: profileManagement.php?error=Your zipcode is too short or too long (Between 5 and 9 characters).");
                 exit();
-            } else {
-                $fullAddress = $address1 . ' ' . $address2 . ', ' . $city . ', ' . $state . ' ' . $zipcode;
-                $_SESSION['full_address'] = $fullAddress;
-                $_SESSION['name'] = $fullName;
-                header("Location: fuelQuoteForm.php");
+            } else {                
+                $sql = "INSERT INTO ClientInformation (id, full_name, address1, address2, city, state, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                if($stmt = mysqli_prepare($conn, $sql)){
+                    mysqli_stmt_bind_param($stmt, "issssss", $session_id, $param_fullName, $param_address1, $param_address2, $param_city, $param_state, $param_zipcode);
+                    
+                    $session_id = intval($_SESSION['id']);
+                    $param_fullName = $fullName;
+                    $param_address1 = $address1;
+                    $param_address2 = $address2;
+                    $param_city = $city;
+                    $param_state = $state;
+                    $param_zipcode = $zipcode;
+
+                    if(mysqli_stmt_execute($stmt)){
+                        $_SESSION['name'] = $fullName;
+                        if (empty($address2)) {
+                            $fullAddress = $address1 . ', ' . $city . ', ' . $state . ' ' . $zipcode;
+                            $_SESSION['full_address'] = $fullAddress;
+                        } else {
+                            $fullAddress = $address1 . ' ' . $address2 . ', ' . $city . ', ' . $state . ' ' . $zipcode;
+                            $_SESSION['full_address'] = $fullAddress;
+                        }
+                        header("Location: fuelQuoteForm.php");
+                        exit();
+                    } else{
+                        header("Location: profileManagement.php?error=Oops! Something went wrong. Please try again later.");
+                        exit();
+                    }
+                    mysqli_stmt_close($stmt);
+                }
             }
         } 
     } else {
         header("Location: register.php");
+        exit();
     }
+
+    mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
