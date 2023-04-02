@@ -11,6 +11,8 @@ class Website {
             return false;
         } else if ($password != $confirmPassword) {
             return false;
+        } else if (strlen($password) > 200 || strlen($confirmPassword) > 200) {
+            return false;
         } else {
             return true; 
         }
@@ -18,6 +20,8 @@ class Website {
 
     public function attemptUsername($username) {
         if (empty($username)) {
+            return false;
+        } else if (strlen($username) > 200) {
             return false;
         } else {
             return true;
@@ -84,6 +88,8 @@ class Website {
         if (empty($requestGallons)) {
             return false;
         } else if (!is_numeric($requestGallons)) {
+            return false;
+        } else if ($requestGallons > 10000) {
             return false;
         } else {
             return true;
