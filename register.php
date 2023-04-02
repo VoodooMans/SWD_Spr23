@@ -1,5 +1,6 @@
 <?php
 session_start(); 
+require_once('db_conn.php');
 
 if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['confirm_password'])) {
     function validate($data) {
@@ -13,6 +14,8 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['conf
     $password = validate($_POST['password']);
     $confirm_password = validate($_POST["confirm_password"]);
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+    $validUsername = $validPassword = $validConfirmPassword = "";
 
     if (strlen($password) < 6) {
         header("Location: register.php?error=Password must have at least 6 characters.");
@@ -29,11 +32,57 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['conf
     } else if ($password != $confirm_password) {
         header("Location: register.php?error=Passwords did not match.");
         exit();
+    } else if (strlen($password) > 200 || strlen($confirm_password) > 200) {
+        header("Location: register.php?error=Password is too long.");
+        exit();
+    } else if (strlen($username) > 200) {
+        header("Location: register.php?error=Username is too long.");
+        exit();
     } else {
-        $_SESSION['user_name'] = $username;
-        $_SESSION['id'] = "2";
-        header("Location: profileManagement.php");
+        $sql = "SELECT id FROM UserCredentials WHERE username = ?";
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "s", $param_username); 
+            
+            $param_username = $username;
+
+            if(mysqli_stmt_execute($stmt)){
+                mysqli_stmt_store_result($stmt); 
+                $row = mysqli_stmt_fetch($stmt);
+                $_SESSION['id'] = $row['id'];
+
+                if(mysqli_stmt_num_rows($stmt) == 1){
+                    header("Location: register.php?error=This username is already taken.");
+                    exit();
+                } else {
+                    $validUsername = $username;
+                }
+            } else{
+                header("Location: register.php?error=Oops! Something went wrong. Please try again later.");
+                exit();
+            }
+            mysqli_stmt_close($stmt);
+        }
+
+        $sql = "INSERT INTO UserCredentials (username, pass) VALUES (?, ?)";
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+            
+            $param_username = $username; 
+            $param_password = $password_hash; 
+            
+            if(mysqli_stmt_execute($stmt)){
+                $_SESSION['user_name'] = $username;
+                header("Location: profileManagement.php");
+                exit();
+            } else{
+                header("Location: register.php?error=Oops! Something went wrong. Please try again later.");
+                exit();
+            }
+            mysqli_stmt_close($stmt);
+        }
     }
+    
+    mysqli_close($conn);
 }
 ?>
 
