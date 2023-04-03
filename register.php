@@ -15,7 +15,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['conf
     $confirm_password = validate($_POST["confirm_password"]);
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
-    $validUsername = $validPassword = $validConfirmPassword = "";
+    //$validUsername = $validPassword = $validConfirmPassword = "";
 
     if (strlen($password) < 6) {
         header("Location: register.php?error=Password must have at least 6 characters.");
@@ -46,16 +46,12 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['conf
             $param_username = $username;
 
             if(mysqli_stmt_execute($stmt)){
-                mysqli_stmt_store_result($stmt); 
-                $row = mysqli_stmt_fetch($stmt);
-                $_SESSION['id'] = $row['id'];
+                mysqli_stmt_store_result($stmt);
 
                 if(mysqli_stmt_num_rows($stmt) == 1){
                     header("Location: register.php?error=This username is already taken.");
                     exit();
-                } else {
-                    $validUsername = $username;
-                }
+                } 
             } else{
                 header("Location: register.php?error=Oops! Something went wrong. Please try again later.");
                 exit();
@@ -72,6 +68,12 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['conf
             
             if(mysqli_stmt_execute($stmt)){
                 $_SESSION['user_name'] = $username;
+                
+                $sql = "SELECT id FROM UserCredentials WHERE username = '$param_username' AND pass = '$param_password'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                $_SESSION['id'] = $row['id'];
+
                 header("Location: profileManagement.php");
                 exit();
             } else{
