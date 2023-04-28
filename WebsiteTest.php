@@ -207,7 +207,7 @@ class WebsiteTest extends \PHPUnit\Framework\TestCase {
     public function testRequestGallons4() {
         $gallons = new Demo\Website;
 
-        $result = $gallons->attemptRequestGallons("11000");
+        $result = $gallons->attemptRequestGallons("110000");
         $this->assertEquals(false, $result);
     }
 
@@ -221,7 +221,14 @@ class WebsiteTest extends \PHPUnit\Framework\TestCase {
     public function testDate2() {
         $date = new Demo\Website;
 
-        $result = $date->attemptDate("2023-04-25");
+        $result = $date->attemptDate("2023-04-28");
         $this->assertEquals(true, $result);
+    }
+
+    public function testDate3() {
+        $date = new Demo\Website;
+
+        $result = $date->attemptDate("2023-04-25");
+        $this->assertEquals(false, $result);
     }
 }
