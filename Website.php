@@ -89,7 +89,7 @@ class Website {
             return false;
         } else if (!is_numeric($requestGallons)) {
             return false;
-        } else if ($requestGallons > 10000) {
+        } else if ($requestGallons > 100000) {
             return false;
         } else {
             return true;
@@ -98,6 +98,8 @@ class Website {
 
     public function attemptDate($date) {
         if (empty($date)) {
+            return false;
+        } else if ($date < "2023-04-28") {
             return false;
         } else {
             return true;
